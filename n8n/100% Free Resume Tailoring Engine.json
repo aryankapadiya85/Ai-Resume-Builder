@@ -1,0 +1,145 @@
+{
+  "name": "100% Free Resume Tailoring Engine",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generate-free-resume",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "3569c57d-87c6-41c4-9b65-58e79c372b44",
+      "name": "Webhook (Receive Form Data)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        16
+      ],
+      "webhookId": "f13a7f06-9e43-4698-9aa9-19205ab852b5"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "YOUR_API_KEY_HERE"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openai/gpt-oss-20b\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are an expert recruiter and professional resume writer. Tailor the candidate's resume to the job description without inventing experience, skills, education, companies, or achievements. Create a professional tailored resume and a short cover letter. Return clean HTML and PDF suitable for an email.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Master Resume:\\nName: {{ $json.body.fullName }}\\nEmail: {{ $json.body.email }}\\nPhone: {{ $json.body.phone }}\\nLocation: {{ $json.body.location }}\\n\\nObjective: {{ $json.body.objective }}\\n\\nEducation: {{ $json.body.education }}\\n\\nSkills: {{ $json.body.skills }}\\n\\nExperience: {{ $json.body.experience }}\\n\\nProjects: {{ $json.body.projects }}\\n\\nCertifications: {{ $json.body.certifications }}\\n\\nAchievements: {{ $json.body.achievements }}\\n\\nJob Description:\\n{{ $json.body.jobDescription }}\"\n    }\n  ],\n  \"temperature\": 0.4\n}",
+        "options": {}
+      },
+      "id": "462a3601-0e48-4c0e-b16d-44cafd2bc4ad",
+      "name": "Groq AI (Free LLM)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        16,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "aryankapadiya2502@gmail.com",
+        "subject": "Your Tailored Resume and Cover Letter",
+        "message": "={{ $json.choices[0].message.content }}",
+        "options": {}
+      },
+      "id": "96d3a910-3124-41b9-a1a0-acc1739ad8fa",
+      "name": "Gmail (Send Free Email)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        432,
+        16
+      ],
+      "webhookId": "75e44448-4be2-4f02-b661-340345a9415c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "hNqSuwawOGj6htzf",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html": "={{ $json.choices[0].message.content }} ",
+        "additionalOptions": {}
+      },
+      "type": "n8n-nodes-pdfbolt.pdfBolt",
+      "typeVersion": 1,
+      "position": [
+        240,
+        16
+      ],
+      "id": "c3a885f2-f95b-4de7-aff3-0619e3fbb554",
+      "name": "PDFBolt",
+      "credentials": {
+        "pdfBoltApi": {
+          "id": "RG0cWMihyVMDqV4B",
+          "name": "PDFBolt account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook (Receive Form Data)": {
+      "main": [
+        [
+          {
+            "node": "Groq AI (Free LLM)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq AI (Free LLM)": {
+      "main": [
+        [
+          {
+            "node": "PDFBolt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDFBolt": {
+      "main": [
+        [
+          {
+            "node": "Gmail (Send Free Email)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0dcbf56d-fd50-4cd9-93ca-a02d23e9c951",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "693e693fc0907b93e49017ce6c8d9dab451dcb8253e0fdad4116303007eb5529"
+  },
+  "nodeGroups": [],
+  "id": "8buYn68vT4cYxYqQ",
+  "tags": []
+}
