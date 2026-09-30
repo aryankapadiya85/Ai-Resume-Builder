@@ -1,41 +1,36 @@
-# ResumeAI UI — 3D edition
+# AI Resume Builder - Dimensional Edition
 
-Frontend for your n8n resume-generation workflow: Website → n8n Webhook → Groq AI → Resume + Cover Letter → Gmail.
+A sleek, dimensional web interface for the AI Resume Tailoring Engine. Features an immersive dark mode design and smooth micro-animations.
 
-This version presents the form as a three-step wizard with a tilting 3D paper stack in the hero (it follows your cursor) and a flip transition between steps.
+## 🚀 Features
+- **Modern UI**: Dark mode, dimensional rendering, and micro-animations using Framer Motion.
+- **n8n Integration**: Sends user data to an automated n8n webhook workflow.
+- **Groq AI Tailoring**: Uses Groq LLMs to instantly analyze and tailor resumes for specific job descriptions.
+- **Automated PDF Delivery**: Converts the tailored HTML into a PDF via PDFBolt and emails the final result via Gmail API.
 
-## Run it
+## 💻 Tech Stack
+- **Frontend**: React, Vite, Framer Motion, Vanilla CSS
+- **Backend Workflow**: n8n, Groq AI, PDFBolt, Gmail API
 
-```bash
-npm install
-npm run dev
-```
+## 🛠️ How to Run Locally
 
-## Point it at your workflow
+1. Clone the repository
+   ```bash
+   git clone https://github.com/aryankapadiya85/Ai-Resume-Builder.git
+   ```
 
-Open `src/main.jsx` and check the `WEBHOOK_URL` constant near the top:
+2. Install dependencies
+   ```bash
+   npm install
+   ```
 
-```js
-const WEBHOOK_URL =
-  "https://aryankapadiya85.app.n8n.cloud/webhook/generate-free-resume";
-```
+3. Start the development server
+   ```bash
+   npm run dev
+   ```
 
-- While testing in the n8n editor, use the **test** URL: `.../webhook-test/generate-free-resume`
-- Once your workflow is Published/Active, use the **production** URL above.
+## 🤖 Backend Automation
+The project includes the n8n workflow file located in the `n8n` directory. You can import this JSON file directly into your n8n instance to set up the webhook and email delivery system.
 
-No API key is stored in this frontend.
-
-## What's included
-
-- `index.html` — loads Fraunces (display serif) + JetBrains Mono
-- `src/main.jsx` — three-step wizard (Personal → Career → Target job), 3D tilt hero, submit/loading/success/error states
-- `src/styles.css` — all the 3D transforms, glow, and responsive rules
-- `package.json`, `vite.config.js` — standard Vite + React, no extra dependencies
-
-## Fields collected
-
-**Personal details** — full name, email, phone, location
-**Career details** — objective, education, skills, experience, projects, certifications, achievements
-**Target job** — job title, job description
-
-Submitting on the final step fires the webhook immediately.
+---
+*Designed & built by [Aryan Kapadiya](https://github.com/aryankapadiya85)*
