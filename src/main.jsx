@@ -9,7 +9,7 @@ import "./styles.css";
 // Once the workflow is Published/Active, use the PRODUCTION url below.
 // ---------------------------------------------------------------------------
 const WEBHOOK_URL =
-  "https://aryankapadiya85.app.n8n.cloud/webhook/generate-free-resume";
+  "/api/generate";
 
 const initialState = {
   fullName: "",
