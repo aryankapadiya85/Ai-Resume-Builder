@@ -28,14 +28,14 @@ export default async function handler(req, res) {
     }
     const htmlResume = groqData.choices[0].message.content;
 
-    // 2. Convert HTML to PDF using PDFBolt (or similar HTML-to-PDF API)
-    const pdfResponse = await fetch('https://api.pdfbolt.com/v1/pdf/create', {
+    // 2. Convert HTML to PDF using PDFBolt
+    const pdfResponse = await fetch('https://api.pdfbolt.com/v1/direct', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.PDFBOLT_API_KEY}`,
+        'API-KEY': process.env.PDFBOLT_API_KEY,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ html: htmlResume })
+      body: JSON.stringify({ html: Buffer.from(htmlResume).toString('base64') })
     });
     if (!pdfResponse.ok) {
       const errText = await pdfResponse.text();
