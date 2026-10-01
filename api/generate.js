@@ -37,6 +37,10 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({ html: htmlResume })
     });
+    if (!pdfResponse.ok) {
+      const errText = await pdfResponse.text();
+      throw new Error(`PDFBolt Error: ${pdfResponse.status} ${errText}`);
+    }
     const pdfBuffer = await pdfResponse.arrayBuffer();
 
     // 3. Send Email using Gmail
