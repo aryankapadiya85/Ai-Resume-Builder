@@ -23,6 +23,9 @@ export default async function handler(req, res) {
     });
     
     const groqData = await groqResponse.json();
+    if (!groqResponse.ok || !groqData.choices) {
+      throw new Error(`Groq API Error: ${JSON.stringify(groqData)}`);
+    }
     const htmlResume = groqData.choices[0].message.content;
 
     // 2. Convert HTML to PDF using PDFBolt (or similar HTML-to-PDF API)
