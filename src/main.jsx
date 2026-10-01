@@ -3,10 +3,8 @@ import ReactDOM from "react-dom/client";
 import "./styles.css";
 
 // ---------------------------------------------------------------------------
-// Point this at your n8n webhook.
-// While building/testing your workflow in the n8n editor, use the TEST url:
-//   https://aryankapadiya85.app.n8n.cloud/webhook-test/generate-free-resume
-// Once the workflow is Published/Active, use the PRODUCTION url below.
+// Point this to your Vercel Serverless Function.
+// Uses the api/generate.js endpoint.
 // ---------------------------------------------------------------------------
 const WEBHOOK_URL =
   "/api/generate";
@@ -334,7 +332,7 @@ function App() {
                 )}
               </div>
               <p className="fine-print">
-                Submitting sends your details straight to your n8n workflow — no API key
+                Submitting sends your details straight to our serverless backend — no API key
                 lives in this page.
               </p>
             </form>
@@ -343,7 +341,7 @@ function App() {
 
         <footer className="footer">
           <span>ResumeAI</span>
-          <span>Built on n8n · Groq · Gmail</span>
+          <span>Built on Vercel · Groq · Gmail</span>
         </footer>
       </div>
     </div>
