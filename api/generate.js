@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'llama3-8b-8192',
+        model: 'openai/gpt-oss-20b',
         messages: [
           { role: 'system', content: 'You are an expert resume writer. Output ONLY a clean, professional HTML resume based on the user data. No markdown, just raw HTML.' },
           { role: 'user', content: JSON.stringify(data) }
