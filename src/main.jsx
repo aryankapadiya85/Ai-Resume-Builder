@@ -178,6 +178,46 @@ function Hero() {
   );
 }
 
+function LivePreview({ form }) {
+  return (
+    <div className="live-preview">
+      <div className="live-preview-label">Live Preview</div>
+      <h1 className="lp-name">{form.fullName || "Your Name"}</h1>
+      <div className="lp-contact">
+        {[form.email, form.phone, form.location].filter(Boolean).join(" • ") || "you@email.com • +91 98765 43210 • Location"}
+      </div>
+
+      {form.objective && (
+        <div className="lp-section">
+          <div className="lp-title">Career Objective</div>
+          <div className="lp-content">{form.objective}</div>
+        </div>
+      )}
+
+      {form.experience && (
+        <div className="lp-section">
+          <div className="lp-title">Experience</div>
+          <div className="lp-content">{form.experience}</div>
+        </div>
+      )}
+
+      {form.education && (
+        <div className="lp-section">
+          <div className="lp-title">Education</div>
+          <div className="lp-content">{form.education}</div>
+        </div>
+      )}
+
+      {form.skills && (
+        <div className="lp-section">
+          <div className="lp-title">Skills</div>
+          <div className="lp-content">{form.skills}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function App() {
   const [form, setForm] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
@@ -253,8 +293,9 @@ function App() {
   return (
     <div className="app">
       <div className="grain" />
-      <div className="container">
-        <Hero />
+      <div className="app-split">
+        <div className="container">
+          <Hero />
 
         {status === "success" ? (
           <div className="panel result-panel">
@@ -344,6 +385,11 @@ function App() {
           <span>ResumeAI</span>
           <span>Built on Vercel · Groq · Gmail</span>
         </footer>
+        </div>
+        
+        <div className="preview-container">
+          <LivePreview form={form} />
+        </div>
       </div>
     </div>
   );
