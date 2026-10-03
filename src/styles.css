@@ -41,7 +41,7 @@ textarea {
 .app {
   min-height: 100vh;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
   background:
     radial-gradient(ellipse 900px 500px at 20% -10%, rgba(124, 104, 224, 0.18), transparent 60%),
     radial-gradient(ellipse 700px 500px at 90% 10%, rgba(227, 163, 65, 0.12), transparent 60%),
