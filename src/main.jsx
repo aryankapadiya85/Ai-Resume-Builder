@@ -13,6 +13,7 @@ const WEBHOOK_URL =
 const initialState = {
   fullName: "",
   email: "",
+  linkedIn: "",
   phone: "",
   location: "",
   objective: "",
@@ -35,6 +36,7 @@ const STEPS = [
     fields: [
       { name: "fullName", label: "Full name", type: "text", required: true, placeholder: "Enter your Name" },
       { name: "email", label: "Email", type: "email", required: true, placeholder: "you@email.com" },
+      { name: "linkedIn", label: "LinkedIn Username", type: "text", required: false, placeholder: "linkedin.com/in/username" },
       { name: "phone", label: "Phone", type: "tel", required: true, placeholder: "+91 98765 43210" },
       { name: "location", label: "Location", type: "text", required: true, placeholder: "Rajkot, Gujarat" },
     ],
