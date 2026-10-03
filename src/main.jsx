@@ -455,8 +455,7 @@ function App() {
                 </p>
               </form>
             </>
-          )
-        )}
+          )}
 
         <footer className="footer">
           <span>ResumeAI</span>
