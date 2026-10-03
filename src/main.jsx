@@ -178,12 +178,127 @@ function Hero() {
   );
 }
 
+function AuthScreen({ onAuthenticated }) {
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [hash, setHash] = useState("");
+  const [status, setStatus] = useState("idle"); // idle, sending, pending, verifying, error
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+    if (!email) {
+      setErrorMsg("Please enter your email.");
+      return;
+    }
+    setStatus("sending");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send OTP");
+      setHash(data.hash);
+      setStatus("pending");
+    } catch (err) {
+      setErrorMsg(err.message);
+      setStatus("error");
+    }
+  };
+
+  const handleVerifyOtp = async (e) => {
+    e.preventDefault();
+    if (!otp) {
+      setErrorMsg("Please enter the OTP.");
+      return;
+    }
+    setStatus("verifying");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp, hash }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Invalid OTP");
+      onAuthenticated(email);
+    } catch (err) {
+      setErrorMsg(err.message);
+      setStatus("pending"); // go back to pending so they can retry
+    }
+  };
+
+  return (
+    <div className="auth-stage">
+      <div className="panel auth-panel">
+        <div className="section-heading">
+          <div>
+            <h2>Human Authentication</h2>
+            <p className="section-note">Verify your email to continue.</p>
+          </div>
+        </div>
+
+        {(status === "idle" || status === "sending" || (status === "error" && !hash)) ? (
+          <form onSubmit={handleSendOtp}>
+            <div className="field">
+              <label htmlFor="authEmail">Email address</label>
+              <input
+                id="authEmail"
+                type="email"
+                required
+                placeholder="you@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={status === "sending"}
+              />
+            </div>
+            {errorMsg && <p className="field-warning">{errorMsg}</p>}
+            <button type="submit" className="generate-btn" style={{ marginTop: '20px' }} disabled={status === "sending"}>
+              {status === "sending" ? "Sending OTP..." : "Send OTP"}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerifyOtp}>
+            <div className="field">
+              <label htmlFor="authOtp">Enter OTP</label>
+              <input
+                id="authOtp"
+                type="text"
+                required
+                placeholder="123456"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                disabled={status === "verifying"}
+              />
+            </div>
+            <p className="fine-print" style={{ textAlign: "left" }}>Code sent to {email}</p>
+            {errorMsg && <p className="field-warning">{errorMsg}</p>}
+            <button type="submit" className="generate-btn" style={{ marginTop: '20px' }} disabled={status === "verifying"}>
+              {status === "verifying" ? "Verifying..." : "Verify & Continue"}
+            </button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [form, setForm] = useState(initialState);
   const [currentStep, setCurrentStep] = useState(0);
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState("");
   const [attempted, setAttempted] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const handleAuthenticated = (email) => {
+    setForm(prev => ({ ...prev, email })); // Pre-fill email
+    setIsAuthenticated(true);
+  };
 
   const step = STEPS[currentStep];
 
@@ -256,7 +371,9 @@ function App() {
       <div className="container">
         <Hero />
 
-        {status === "success" ? (
+        {!isAuthenticated ? (
+          <AuthScreen onAuthenticated={handleAuthenticated} />
+        ) : status === "success" ? (
           <div className="panel result-panel">
             <p className="result-seal">✓</p>
             <h2>Your workflow is running</h2>
@@ -332,12 +449,13 @@ function App() {
                   </button>
                 )}
               </div>
-              <p className="fine-print">
-                Submitting sends your details straight to our serverless backend — no API key
-                lives in this page.
-              </p>
-            </form>
-          </>
+                <p className="fine-print">
+                  Submitting sends your details straight to our serverless backend — no API key
+                  lives in this page.
+                </p>
+              </form>
+            </>
+          )
         )}
 
         <footer className="footer">
