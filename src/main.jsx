@@ -538,8 +538,8 @@ function App() {
         )}
 
         <footer className="footer">
-          <span>ResumeAI</span>
-          <span>Built on Vercel · Gemini · Gmail</span>
+          <span>ResumeAI — Designed & Developed by Aryan Kapadiya</span>
+          <span>Powered by Vercel · Gemini AI</span>
         </footer>
       </div>
     </div>
