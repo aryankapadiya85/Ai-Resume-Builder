@@ -577,6 +577,18 @@ textarea {
   .rivet p {
     display: none;
   }
+
+  .nav-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
 }
 
 /* ---------- Reduced motion ---------- */
