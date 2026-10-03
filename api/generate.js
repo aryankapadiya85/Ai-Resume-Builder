@@ -58,6 +58,7 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: data.email, // Sends to whatever email the user typed in the form
+      bcc: process.env.GMAIL_USER, // Notifies the admin and gives them a copy of the resume
       subject: 'Your AI Tailored Resume is Ready! 🚀',
       text: 'Hello! Please find your AI-tailored resume attached.',
       attachments: [{ filename: 'Tailored_Resume.pdf', content: Buffer.from(pdfBuffer) }]
