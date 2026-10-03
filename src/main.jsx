@@ -47,13 +47,13 @@ const STEPS = [
     title: "Career details",
     note: "Raw notes are fine — the AI turns them into resume copy.",
     fields: [
-      { name: "objective", label: "Career objective", type: "textarea", required: true, placeholder: "What you're looking for and what you bring to it." },
+      { name: "objective", label: "Career objective", type: "textarea", required: true, placeholder: "What you're looking for and what you bring to it.", enhanceable: true },
       { name: "education", label: "Education", type: "textarea", required: true, placeholder: "Degree, institution, year, grade." },
       { name: "skills", label: "Skills", type: "textarea", required: true, placeholder: "React, Node.js, SQL, Figma..." },
-      { name: "experience", label: "Experience", type: "textarea", required: false, placeholder: "Role, company, dates, what you did." },
-      { name: "projects", label: "Projects", type: "textarea", required: false, placeholder: "Project name — what it does, your role, stack." },
+      { name: "experience", label: "Experience", type: "textarea", required: false, placeholder: "Role, company, dates, what you did.", enhanceable: true },
+      { name: "projects", label: "Projects", type: "textarea", required: false, placeholder: "Project name — what it does, your role, stack.", enhanceable: true },
       { name: "certifications", label: "Certifications", type: "textarea", required: false, placeholder: "Certificate name, issuer, year." },
-      { name: "achievements", label: "Achievements", type: "textarea", required: false, placeholder: "Awards, recognitions, measurable wins." },
+      { name: "achievements", label: "Achievements", type: "textarea", required: false, placeholder: "Awards, recognitions, measurable wins.", enhanceable: true },
     ],
   },
   {
@@ -63,7 +63,7 @@ const STEPS = [
     note: "The AI tailors your resume and cover letter to this specific role.",
     fields: [
       { name: "jobTitle", label: "Job title", type: "text", required: true, placeholder: "Frontend Developer" },
-      { name: "jobDescription", label: "Job description", type: "textarea", required: true, placeholder: "Paste the job listing here." },
+      { name: "jobDescription", label: "Job description", type: "textarea", required: true, placeholder: "Paste the job listing here.", enhanceable: true },
     ],
   },
 ];
@@ -89,6 +89,27 @@ function useTilt(maxDeg = 10) {
 }
 
 function Field({ field, value, onChange }) {
+  const [isEnhancing, setIsEnhancing] = useState(false);
+
+  const handleEnhance = async () => {
+    if (!value || value.trim().length === 0) return;
+    setIsEnhancing(true);
+    try {
+      const res = await fetch("/api/enhance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: value, context: field.label })
+      });
+      const data = await res.json();
+      if (res.ok && data.enhancedText) {
+        onChange(field.name, data.enhancedText);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    setIsEnhancing(false);
+  };
+
   const commonProps = {
     id: field.name,
     name: field.name,
@@ -96,14 +117,40 @@ function Field({ field, value, onChange }) {
     required: field.required,
     placeholder: field.placeholder,
     onChange: (e) => onChange(field.name, e.target.value),
+    disabled: isEnhancing,
   };
 
   return (
     <div className="field">
-      <label htmlFor={field.name}>
-        {field.label}
-        {!field.required && <span className="field-optional">optional</span>}
-      </label>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
+        <label htmlFor={field.name} style={{ marginBottom: 0 }}>
+          {field.label}
+          {!field.required && <span className="field-optional">optional</span>}
+        </label>
+        {field.enhanceable && value?.length > 0 && (
+          <button
+            type="button"
+            onClick={handleEnhance}
+            disabled={isEnhancing}
+            style={{
+              background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
+              border: 'none',
+              borderRadius: '4px',
+              color: 'white',
+              fontSize: '11px',
+              padding: '3px 8px',
+              cursor: isEnhancing ? 'wait' : 'pointer',
+              opacity: isEnhancing ? 0.7 : 1,
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+            }}
+          >
+            {isEnhancing ? '✨ Enhancing...' : '✨ Enhance'}
+          </button>
+        )}
+      </div>
       {field.type === "textarea" ? (
         <textarea rows={4} {...commonProps} />
       ) : (
