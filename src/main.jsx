@@ -230,7 +230,7 @@ function Hero() {
           <div className="sheet-block" />
           <div className="sheet-rule" />
           <div className="sheet-rule sheet-rule-short" />
-          <span className="sheet-seal">AI</span>
+          <span className="sheet-seal">AK</span>
         </div>
         <div className="stage-glow" />
       </div>
