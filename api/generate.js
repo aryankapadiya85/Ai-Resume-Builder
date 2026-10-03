@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     // 1. Call Gemini AI to generate HTML resume and enhance descriptions
     const geminiPrompt = `You are an expert resume writer. Output ONLY a clean, professional HTML resume based on the following user data. Enhance their experience and project descriptions based on their domain to be highly professional and impressive. Do not include any markdown formatting like \`\`\`html, just output raw HTML.\n\nUser Data: ${JSON.stringify(data)}`;
     
-    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${process.env.GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
