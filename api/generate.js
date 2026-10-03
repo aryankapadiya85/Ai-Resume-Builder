@@ -6,27 +6,30 @@ export default async function handler(req, res) {
   try {
     const data = req.body;
     
-    // 1. Call Groq AI to generate HTML resume
-    const groqResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    // 1. Call Gemini AI to generate HTML resume and enhance descriptions
+    const geminiPrompt = `You are an expert resume writer. Output ONLY a clean, professional HTML resume based on the following user data. Enhance their experience and project descriptions based on their domain to be highly professional and impressive. Do not include any markdown formatting like \`\`\`html, just output raw HTML.\n\nUser Data: ${JSON.stringify(data)}`;
+    
+    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-20b',
-        messages: [
-          { role: 'system', content: 'You are an expert resume writer. Output ONLY a clean, professional HTML resume based on the user data. No markdown, just raw HTML.' },
-          { role: 'user', content: JSON.stringify(data) }
-        ]
+        contents: [{
+          role: 'user',
+          parts: [{ text: geminiPrompt }]
+        }],
+        generationConfig: {
+          temperature: 0.7
+        }
       })
     });
     
-    const groqData = await groqResponse.json();
-    if (!groqResponse.ok || !groqData.choices) {
-      throw new Error(`Groq API Error: ${JSON.stringify(groqData)}`);
+    const geminiData = await geminiResponse.json();
+    if (!geminiResponse.ok || !geminiData.candidates) {
+      throw new Error(`Gemini API Error: ${JSON.stringify(geminiData)}`);
     }
-    const htmlResume = groqData.choices[0].message.content;
+    const htmlResume = geminiData.candidates[0].content.parts[0].text.replace(/```html|```/gi, '').trim();
 
     // 2. Convert HTML to PDF using PDFBolt
     const pdfResponse = await fetch('https://api.pdfbolt.com/v1/direct', {

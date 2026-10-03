@@ -260,7 +260,7 @@ function App() {
             <p className="result-seal">✓</p>
             <h2>Your workflow is running</h2>
             <p>
-              Groq is drafting your resume and cover letter now. Check{" "}
+              Gemini AI is drafting your resume and cover letter now. Check{" "}
               <strong>{form.email || "your inbox"}</strong> in a minute or two.
             </p>
             <button type="button" className="secondary-btn" onClick={handleReset}>
