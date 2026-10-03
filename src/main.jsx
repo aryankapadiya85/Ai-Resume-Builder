@@ -280,6 +280,21 @@ function AuthScreen({ onAuthenticated }) {
             <button type="submit" className="generate-btn" style={{ marginTop: '20px' }} disabled={status === "verifying"}>
               {status === "verifying" ? "Verifying..." : "Verify & Continue"}
             </button>
+            {errorMsg && (
+              <button 
+                type="button" 
+                className="secondary-btn" 
+                style={{ marginTop: '10px', width: '100%' }}
+                onClick={() => {
+                  setStatus("idle");
+                  setHash("");
+                  setOtp("");
+                  setErrorMsg("");
+                }}
+              >
+                Go back & resend OTP
+              </button>
+            )}
           </form>
         )}
       </div>
@@ -449,17 +464,17 @@ function App() {
                   </button>
                 )}
               </div>
-                <p className="fine-print">
-                  Submitting sends your details straight to our serverless backend — no API key
-                  lives in this page.
-                </p>
-              </form>
-            </>
-          )}
+              <p className="fine-print">
+                Submitting sends your details straight to our serverless backend — no API key
+                lives in this page.
+              </p>
+            </form>
+          </>
+        )}
 
         <footer className="footer">
           <span>ResumeAI</span>
-          <span>Built on Vercel · Groq · Gmail</span>
+          <span>Built on Vercel · Gemini · Gmail</span>
         </footer>
       </div>
     </div>
