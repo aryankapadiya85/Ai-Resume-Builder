@@ -113,7 +113,7 @@ function Field({ field, value, onChange }) {
   );
 }
 
-function ProgressRail({ currentStep }) {
+function ProgressRail({ currentStep, onStepClick }) {
   return (
     <div className="rail">
       {STEPS.map((step, i) => (
@@ -123,6 +123,8 @@ function ProgressRail({ currentStep }) {
               "rivet" +
               (i === currentStep ? " rivet-active" : i < currentStep ? " rivet-done" : "")
             }
+            onClick={() => onStepClick && onStepClick(i)}
+            style={{ cursor: onStepClick ? "pointer" : "default" }}
           >
             <span>{i < currentStep ? "✓" : step.number}</span>
             <p>{step.title}</p>
@@ -409,7 +411,7 @@ function App() {
           </div>
         ) : (
           <>
-            <ProgressRail currentStep={currentStep} />
+            <ProgressRail currentStep={currentStep} onStepClick={setCurrentStep} />
 
             <form onSubmit={handleSubmit} noValidate>
               <div className="flip-stage">
