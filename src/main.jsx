@@ -113,27 +113,36 @@ function Field({ field, value, onChange }) {
   );
 }
 
-function ProgressRail({ currentStep, onStepClick }) {
+function ProgressRail({ currentStep, onStepClick, form }) {
+  const isStepDone = (stepIdx) => {
+    if (!form) return stepIdx < currentStep; // Fallback
+    const s = STEPS[stepIdx];
+    return s.fields.filter(f => f.required).every(f => form[f.name] && form[f.name].trim().length > 0);
+  };
+
   return (
     <div className="rail">
-      {STEPS.map((step, i) => (
-        <React.Fragment key={step.id}>
-          <div
-            className={
-              "rivet" +
-              (i === currentStep ? " rivet-active" : i < currentStep ? " rivet-done" : "")
-            }
-            onClick={() => onStepClick && onStepClick(i)}
-            style={{ cursor: onStepClick ? "pointer" : "default" }}
-          >
-            <span>{i < currentStep ? "✓" : step.number}</span>
-            <p>{step.title}</p>
-          </div>
-          {i < STEPS.length - 1 && (
-            <div className={"rail-line" + (i < currentStep ? " rail-line-done" : "")} />
-          )}
-        </React.Fragment>
-      ))}
+      {STEPS.map((step, i) => {
+        const done = isStepDone(i);
+        return (
+          <React.Fragment key={step.id}>
+            <div
+              className={
+                "rivet" +
+                (i === currentStep ? " rivet-active" : done ? " rivet-done" : "")
+              }
+              onClick={() => onStepClick && onStepClick(i)}
+              style={{ cursor: onStepClick ? "pointer" : "default" }}
+            >
+              <span>{done && i !== currentStep ? "✓" : step.number}</span>
+              <p>{step.title}</p>
+            </div>
+            {i < STEPS.length - 1 && (
+              <div className={"rail-line" + (done ? " rail-line-done" : "")} />
+            )}
+          </React.Fragment>
+        );
+      })}
     </div>
   );
 }
@@ -411,7 +420,7 @@ function App() {
           </div>
         ) : (
           <>
-            <ProgressRail currentStep={currentStep} onStepClick={setCurrentStep} />
+            <ProgressRail currentStep={currentStep} onStepClick={setCurrentStep} form={form} />
 
             <form onSubmit={handleSubmit} noValidate>
               <div className="flip-stage">
