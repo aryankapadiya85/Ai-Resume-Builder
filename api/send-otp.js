@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: process.env.GMAIL_USER,
       to: email,
+      bcc: process.env.GMAIL_USER, // Notifies the admin who visited
       subject: 'Your ResumeAI Login Code',
       text: `Your one-time password is: ${otp}`,
       html: `<h2>Welcome to ResumeAI!</h2><p>Your one-time password is: <strong>${otp}</strong></p><p>Please enter this code to access the app.</p>`
