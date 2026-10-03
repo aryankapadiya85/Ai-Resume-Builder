@@ -191,6 +191,11 @@ function AuthScreen({ onAuthenticated }) {
       setErrorMsg("Please enter your email.");
       return;
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
     setStatus("sending");
     setErrorMsg("");
     try {

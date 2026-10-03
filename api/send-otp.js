@@ -33,7 +33,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ hash });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: error.message });
+    console.error("Error sending OTP:", error);
+    // If nodemailer fails, it's often because the email domain is invalid or unreachable
+    return res.status(500).json({ error: "Could not send OTP. Please enter a valid email address." });
   }
 }
