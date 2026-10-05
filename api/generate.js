@@ -10,10 +10,10 @@ export default async function handler(req, res) {
     const geminiPrompt = `You are an expert resume designer and ATS-friendly format specialist. Output ONLY a clean, professional HTML resume based on the following user data.
 
 CRITICAL REQUIREMENTS:
-1. STRICTLY ONE PAGE: The output MUST fit entirely on a single A4 page. 
-   - Include this CSS: \`@page { size: A4; margin: 10mm; }\` and \`body { width: 210mm; height: 297mm; box-sizing: border-box; margin: 0 auto; overflow: hidden; }\`
-   - Use compact fonts (10pt-11pt for body, 14pt-16pt for headings), tight line-height (1.25), and minimal margins/padding.
-   - Summarize and condense descriptions into exactly 2-3 short bullet points per role so it never overflows.
+1. FULL ONE-PAGE LAYOUT: The output MUST perfectly fill a single A4 page without overflowing and without looking empty.
+   - Include this CSS: \`@page { size: A4; margin: 10mm; }\` and \`body { width: 210mm; height: 297mm; box-sizing: border-box; margin: 0 auto; overflow: hidden; display: flex; flex-direction: column; }\`
+   - Use standard font sizes (11pt-12pt for body, 16pt-20pt for headings), ample line-height (1.4-1.5), and appropriate margin spacing between sections to make the text breathe and take up space properly.
+   - Expand and deeply enhance the user's experience and project descriptions into highly detailed, impressive bullet points (4-5 robust bullet points per role/project). The resume must look substantial and fully utilize the available page space. Do NOT generate a sparse or half-empty page.
 2. PERFECT ALIGNMENT & ACCURACY: Use Flexbox/Grid for perfect horizontal alignment of dates, job titles, and locations. Do not hallucinate any data.
 3. THEME: Apply the "${data.designFormat || 'modern'}" design format using embedded CSS.
    - modern: Clean, grid-based layout, subtle gray accents.
