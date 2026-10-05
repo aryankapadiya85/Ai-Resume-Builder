@@ -27,7 +27,7 @@ User Data: ${JSON.stringify(data)}`;
     
     const fetchGemini = async (retries = 3) => {
       for (let i = 0; i < retries; i++) {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${process.env.GEMINI_API_KEY}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
