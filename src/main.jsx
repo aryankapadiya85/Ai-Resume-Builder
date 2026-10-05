@@ -68,13 +68,13 @@ const STEPS = [
       {
         name: "designFormat",
         label: "Resume Design",
-        type: "select",
+        type: "design-picker",
         required: true,
         options: [
-          { value: "modern", label: "Modern & Clean" },
-          { value: "professional", label: "Professional & Corporate" },
-          { value: "creative", label: "Creative & Bold" },
-          { value: "minimalist", label: "Minimalist & Simple" },
+          { value: "modern", label: "Modern", desc: "Clean & functional." },
+          { value: "professional", label: "Professional", desc: "Corporate & sleek." },
+          { value: "creative", label: "Creative", desc: "Bold & unique." },
+          { value: "minimalist", label: "Minimalist", desc: "Simple & elegant." },
         ],
       },
     ],
@@ -174,6 +174,22 @@ function Field({ field, value, onChange }) {
             </option>
           ))}
         </select>
+      ) : field.type === "design-picker" ? (
+        <div className="design-picker">
+          {field.options.map((opt) => (
+            <div
+              key={opt.value}
+              className={`design-card ${value === opt.value ? 'selected' : ''}`}
+              onClick={() => onChange(field.name, opt.value)}
+            >
+              <div className={`design-preview preview-${opt.value}`}></div>
+              <div className="design-info">
+                <strong>{opt.label}</strong>
+                <span>{opt.desc}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <input type={field.type} {...commonProps} />
       )}
