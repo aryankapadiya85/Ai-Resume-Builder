@@ -25,6 +25,7 @@ const initialState = {
   achievements: "",
   jobTitle: "",
   jobDescription: "",
+  designFormat: "modern",
 };
 
 const STEPS = [
@@ -64,6 +65,18 @@ const STEPS = [
     fields: [
       { name: "jobTitle", label: "Job title", type: "text", required: true, placeholder: "Frontend Developer" },
       { name: "jobDescription", label: "Job description", type: "textarea", required: true, placeholder: "Paste the job listing here.", enhanceable: true },
+      {
+        name: "designFormat",
+        label: "Resume Design",
+        type: "select",
+        required: true,
+        options: [
+          { value: "modern", label: "Modern & Clean" },
+          { value: "professional", label: "Professional & Corporate" },
+          { value: "creative", label: "Creative & Bold" },
+          { value: "minimalist", label: "Minimalist & Simple" },
+        ],
+      },
     ],
   },
 ];
@@ -153,6 +166,14 @@ function Field({ field, value, onChange }) {
       </div>
       {field.type === "textarea" ? (
         <textarea rows={4} {...commonProps} />
+      ) : field.type === "select" ? (
+        <select {...commonProps}>
+          {field.options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
       ) : (
         <input type={field.type} {...commonProps} />
       )}
