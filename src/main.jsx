@@ -581,10 +581,6 @@ function App() {
                   </button>
                 )}
               </div>
-              <p className="fine-print">
-                Submitting sends your details straight to our serverless backend — no API key
-                lives in this page.
-              </p>
             </form>
           </>
         )}
