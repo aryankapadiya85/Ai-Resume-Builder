@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { Analytics } from "@vercel/analytics/react";
 import "./styles.css";
@@ -406,9 +406,30 @@ function App() {
   const [attempted, setAttempted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  useEffect(() => {
+    const session = localStorage.getItem('resumeai_session');
+    if (session) {
+      try {
+        const { email, expiresAt } = JSON.parse(session);
+        if (expiresAt > Date.now()) {
+          setForm(prev => ({ ...prev, email }));
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('resumeai_session');
+        }
+      } catch (e) {
+        localStorage.removeItem('resumeai_session');
+      }
+    }
+  }, []);
+
   const handleAuthenticated = (email) => {
     setForm(prev => ({ ...prev, email })); // Pre-fill email
     setIsAuthenticated(true);
+    localStorage.setItem('resumeai_session', JSON.stringify({
+      email,
+      expiresAt: Date.now() + 2 * 60 * 60 * 1000 // 2 hours
+    }));
   };
 
   const step = STEPS[currentStep];
