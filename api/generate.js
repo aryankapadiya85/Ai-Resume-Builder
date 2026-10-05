@@ -8,17 +8,20 @@ export default async function handler(req, res) {
     
     // 1. Call Gemini AI to generate HTML resume and enhance descriptions
     const geminiPrompt = `You are an expert resume writer and layout specialist.
-Your task is to generate a beautiful, strictly 1-page HTML resume using the EXACT user data provided. 
+Your task is to generate a beautiful, highly detailed, multi-page HTML resume using the EXACT user data provided. 
 
 CRITICAL INSTRUCTIONS:
-1. SPACING AND FULL PAGE: Expand on the user's experience and projects by generating 4-6 highly detailed, impressive, and professional bullet points per role/project so that the text is substantial enough to gracefully fill a standard A4 page. Do NOT make the resume look half-empty.
-2. ACCURACY & ALIGNMENT: DO NOT hallucinate dates or job titles. Use exactly what is provided, just enhance the descriptive bullet points. Ensure dates are perfectly aligned to the right using Flexbox without getting cut off (e.g. \`.row { display: flex; justify-content: space-between; align-items: baseline; }\`).
-3. CSS/HTML FORMAT: You must output RAW HTML only. NO markdown blocks (like \`\`\`html). Use embedded CSS inside a <style> tag.
-4. CSS REQUIREMENTS: 
+1. DETAILED CONTENT: Expand on the user's experience and projects by generating 5-7 highly detailed, impressive, and professional bullet points per role/project. It is expected and perfectly fine if the resume spans 2 pages.
+2. PAGE BREAK ALIGNMENT: To ensure professional alignment across multiple pages, you MUST include CSS to prevent awkward page breaks. 
+   - Add CSS: \`section, .experience-item, .project-item, .education-item { page-break-inside: avoid; break-inside: avoid; }\` 
+   - Add CSS: \`h1, h2, h3, h4, .row { page-break-after: avoid; break-after: avoid; }\`
+   - This guarantees that a heading is never separated from its content across pages.
+3. ACCURACY & ALIGNMENT: DO NOT hallucinate dates or job titles. Use exactly what is provided. Ensure dates are perfectly aligned to the right using Flexbox without getting cut off (e.g. \`.row { display: flex; justify-content: space-between; align-items: baseline; }\`).
+4. CSS/HTML FORMAT: You must output RAW HTML only. NO markdown blocks. Use embedded CSS inside a <style> tag.
+5. CSS REQUIREMENTS: 
    - Apply the "${data.designFormat || 'modern'}" design format. 
    - Include: \`@page { size: A4; margin: 15mm; }\`
    - Include: \`body { font-family: 'Inter', 'Helvetica', sans-serif; font-size: 11.5pt; line-height: 1.6; color: #111; max-width: 100%; box-sizing: border-box; }\`
-   - Add generous \`margin-bottom: 20px;\` to all major sections so that the resume stretches elegantly to fill the page, rather than cramping at the top.
 
 User Data:
 ${JSON.stringify(data, null, 2)}
