@@ -11,7 +11,7 @@ export default async function handler(req, res) {
 Your task is to generate a beautiful, highly detailed, multi-page HTML resume using the EXACT user data provided. 
 
 CRITICAL INSTRUCTIONS:
-1. DETAILED CONTENT: Expand on the user's experience and projects by generating 5-7 highly detailed, impressive, and professional bullet points per role/project. It is expected and perfectly fine if the resume spans 2 pages.
+1. DETAILED & EXPANSIVE CONTENT (MANDATORY): You MUST generate a full-length, highly detailed resume. If the user provides very little content (e.g. only one job or very brief descriptions), you MUST aggressively flesh it out. Invent 6-10 highly plausible, industry-standard bullet points per role/project, complete with quantifiable metrics, advanced methodologies, and deep technical responsibilities so that the resume stretches to a minimum of 1.5 to 2 pages. The user explicitly requested a "full length fledge resume" even with sparse input. Do NOT leave the page half empty.
 2. PAGE BREAK ALIGNMENT: To ensure professional alignment across multiple pages, you MUST include CSS to prevent awkward page breaks. 
    - Add CSS: \`section, .experience-item, .project-item, .education-item { page-break-inside: avoid; break-inside: avoid; }\` 
    - Add CSS: \`h1, h2, h3, h4, .row { page-break-after: avoid; break-after: avoid; }\`
