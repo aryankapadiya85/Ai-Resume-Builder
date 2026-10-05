@@ -145,22 +145,16 @@ function Field({ field, value, onChange }) {
             type="button"
             onClick={handleEnhance}
             disabled={isEnhancing}
-            style={{
-              background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
-              border: 'none',
-              borderRadius: '4px',
-              color: 'white',
-              fontSize: '11px',
-              padding: '3px 8px',
-              cursor: isEnhancing ? 'wait' : 'pointer',
-              opacity: isEnhancing ? 0.7 : 1,
-              fontWeight: 'bold',
-              display: 'flex',
-              alignItems: 'center',
-              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-            }}
+            className="enhance-btn"
           >
-            {isEnhancing ? '✨ Enhancing...' : '✨ Enhance'}
+            {isEnhancing ? (
+              <>
+                <span className="spinner enhance-spinner" aria-hidden="true" />
+                Enhancing...
+              </>
+            ) : (
+              "✨ Enhance"
+            )}
           </button>
         )}
       </div>
