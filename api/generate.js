@@ -25,26 +25,36 @@ CRITICAL REQUIREMENTS:
 
 User Data: ${JSON.stringify(data)}`;
     
-    const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        contents: [{
-          role: 'user',
-          parts: [{ text: geminiPrompt }]
-        }],
-        generationConfig: {
-          temperature: 0.7
+    const fetchGemini = async (retries = 3) => {
+      for (let i = 0; i < retries; i++) {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            contents: [{
+              role: 'user',
+              parts: [{ text: geminiPrompt }]
+            }],
+            generationConfig: {
+              temperature: 0.7
+            }
+          })
+        });
+        const data = await res.json();
+        if (res.ok && data.candidates) {
+          return data;
         }
-      })
-    });
-    
-    const geminiData = await geminiResponse.json();
-    if (!geminiResponse.ok || !geminiData.candidates) {
-      throw new Error(`Gemini API Error: ${JSON.stringify(geminiData)}`);
-    }
+        if (i === retries - 1) {
+          throw new Error(`Gemini API Error: ${JSON.stringify(data)}`);
+        }
+        // Wait before retrying (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 1000 * Math.pow(2, i)));
+      }
+    };
+
+    const geminiData = await fetchGemini();
     const htmlResume = geminiData.candidates[0].content.parts[0].text.replace(/```html|```/gi, '').trim();
 
     // 2. Convert HTML to PDF using PDFBolt
