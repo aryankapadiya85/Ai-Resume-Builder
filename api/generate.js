@@ -7,23 +7,22 @@ export default async function handler(req, res) {
     const data = req.body;
     
     // 1. Call Gemini AI to generate HTML resume and enhance descriptions
-    const geminiPrompt = `You are an expert resume designer and ATS-friendly format specialist. Output ONLY a clean, professional HTML resume based on the following user data.
+    const geminiPrompt = `You are an expert resume writer and layout specialist.
+Your task is to generate a beautiful, strictly 1-page HTML resume using the EXACT user data provided. 
 
-CRITICAL REQUIREMENTS:
-1. FULL ONE-PAGE LAYOUT: The output MUST perfectly fill a single A4 page without overflowing and without looking empty.
-   - Include this CSS: \`@page { size: A4; margin: 10mm; }\` and \`body { width: 210mm; height: 297mm; box-sizing: border-box; margin: 0 auto; overflow: hidden; display: flex; flex-direction: column; }\`
-   - Use standard font sizes (11pt-12pt for body, 16pt-20pt for headings), ample line-height (1.4-1.5), and appropriate margin spacing between sections to make the text breathe and take up space properly.
-   - Expand and deeply enhance the user's experience and project descriptions into highly detailed, impressive bullet points (4-5 robust bullet points per role/project). The resume must look substantial and fully utilize the available page space. Do NOT generate a sparse or half-empty page.
-2. PERFECT ALIGNMENT & ACCURACY: Use Flexbox/Grid for perfect horizontal alignment of dates, job titles, and locations. Do not hallucinate any data.
-3. THEME: Apply the "${data.designFormat || 'modern'}" design format using embedded CSS.
-   - modern: Clean, grid-based layout, subtle gray accents.
-   - professional: Traditional corporate layout, navy blue headers, clean layout.
-   - creative: Bold header, unique color accents, modern layout.
-   - minimalist: Ultra-clean, monochrome, elegant typography.
-4. Enhance descriptions to be highly professional but concise.
-5. NO MARKDOWN: Output RAW HTML only. Do not include \`\`\`html tags.
+CRITICAL INSTRUCTIONS:
+1. SPACING AND FULL PAGE: Expand on the user's experience and projects by generating 4-6 highly detailed, impressive, and professional bullet points per role/project so that the text is substantial enough to gracefully fill a standard A4 page. Do NOT make the resume look half-empty.
+2. ACCURACY & ALIGNMENT: DO NOT hallucinate dates or job titles. Use exactly what is provided, just enhance the descriptive bullet points. Ensure dates are perfectly aligned to the right using Flexbox without getting cut off (e.g. \`.row { display: flex; justify-content: space-between; align-items: baseline; }\`).
+3. CSS/HTML FORMAT: You must output RAW HTML only. NO markdown blocks (like \`\`\`html). Use embedded CSS inside a <style> tag.
+4. CSS REQUIREMENTS: 
+   - Apply the "${data.designFormat || 'modern'}" design format. 
+   - Include: \`@page { size: A4; margin: 15mm; }\`
+   - Include: \`body { font-family: 'Inter', 'Helvetica', sans-serif; font-size: 11.5pt; line-height: 1.6; color: #111; max-width: 100%; box-sizing: border-box; }\`
+   - Add generous \`margin-bottom: 20px;\` to all major sections so that the resume stretches elegantly to fill the page, rather than cramping at the top.
 
-User Data: ${JSON.stringify(data)}`;
+User Data:
+${JSON.stringify(data, null, 2)}
+`;
     
     const fetchGemini = async (retries = 3) => {
       for (let i = 0; i < retries; i++) {
